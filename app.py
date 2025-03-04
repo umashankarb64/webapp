@@ -13,12 +13,8 @@ from streamlit_folium import folium_static
 import os
 import tempfile
 
-# Create a temporary file with the credentials
-credentials_path = tempfile.NamedTemporaryFile(suffix='.json', delete=False)
-with open(credentials_path.name, 'w') as f:
-    json.dump(dict(st.secrets["gcp_credentials"]), f)
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = credentials_path.name
-
+# Set Google Cloud credentials
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "service-account.json"
 
 # Initialize BigQuery client
 client = bigquery.Client()
