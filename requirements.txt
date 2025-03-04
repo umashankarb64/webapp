@@ -6,3 +6,4 @@ folium
 matplotlib
 seaborn
 streamlit_folium
+json
