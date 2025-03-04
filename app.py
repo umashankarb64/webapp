@@ -3,6 +3,7 @@ from google.cloud import bigquery
 import pandas as pd
 import plotly.express as px
 import folium
+import json
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -11,8 +12,7 @@ from streamlit_folium import folium_static
 import os
 
 # Load service account credentials from Streamlit secrets
-credentials_json = st.secrets["GOOGLE_APPLICATION_CREDENTIALS_JSON"]
-credentials_dict = json.loads(credentials_json)
+credentials_dict = st.secrets["GOOGLE_APPLICATION_CREDENTIALS_JSON"]  # Already a dict
 
 # Save credentials temporarily
 with open("/tmp/gcp_credentials.json", "w") as f:
