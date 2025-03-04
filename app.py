@@ -14,7 +14,7 @@ import os
 import tempfile
 
 # Create a temporary file with the credentials
-credentials = json.dumps(st.secrets["gcp_credentials"])
+credentials = json.dumps(dict(st.secrets["gcp_credentials"]))
 credentials_path = tempfile.NamedTemporaryFile(suffix='.json', delete=False)
 with open(credentials_path.name, 'w') as f:
     f.write(credentials)
