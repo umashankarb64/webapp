@@ -11,13 +11,17 @@ from folium.plugins import HeatMap
 from streamlit_folium import folium_static
 import os
 
-# Load service account credentials from Streamlit secrets
-credentials_dict = st.secrets["GOOGLE_APPLICATION_CREDENTIALS_JSON"]  # Already a dict
-
-# Save credentials temporarily
+# Instead of:
+credentials_dict = st.secrets["GOOGLE_APPLICATION_CREDENTIALS_JSON"]  # This isn't a dict that json can dump
 with open("/tmp/gcp_credentials.json", "w") as f:
     json.dump(credentials_dict, f)
 
+# Use this:
+credentials_dict = dict(st.secrets["GOOGLE_APPLICATION_CREDENTIALS_JSON"])  # Convert to dict
+# Or alternatively write it directly without json.dump:
+with open("/tmp/gcp_credentials.json", "w") as f:
+    json_str = json.dumps(credentials_dict)
+    f.write(json_str)
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "/tmp/gcp_credentials.json"
 
 # Initialize BigQuery client
