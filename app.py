@@ -11,28 +11,15 @@ import seaborn as sns
 from folium.plugins import HeatMap
 from streamlit_folium import folium_static
 import os
+import tempfile
 
-# Load service account credentials from Streamlit secrets and convert to standard Python dict
-credentials = st.secrets["GOOGLE_APPLICATION_CREDENTIALS_JSON"]
-credentials_dict = {
-    "type": str(credentials.get("type", "")),
-    "project_id": str(credentials.get("project_id", "")),
-    "private_key_id": str(credentials.get("private_key_id", "")),
-    "private_key": str(credentials.get("private_key", "")),
-    "client_email": str(credentials.get("client_email", "")),
-    "client_id": str(credentials.get("client_id", "")),
-    "auth_uri": str(credentials.get("auth_uri", "")),
-    "token_uri": str(credentials.get("token_uri", "")),
-    "auth_provider_x509_cert_url": str(credentials.get("auth_provider_x509_cert_url", "")),
-    "client_x509_cert_url": str(credentials.get("client_x509_cert_url", "")),
-    "universe_domain": str(credentials.get("universe_domain", ""))
-}
+# Create a temporary file with the credentials
+credentials = json.dumps(st.secrets["gcp_credentials"])
+credentials_path = tempfile.NamedTemporaryFile(suffix='.json', delete=False)
+with open(credentials_path.name, 'w') as f:
+    f.write(credentials)
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = credentials_path.name
 
-# Save credentials temporarily
-with open("/tmp/gcp_credentials.json", "w") as f:
-    json.dump(credentials_dict, f)
-
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "/tmp/gcp_credentials.json"
 
 # Initialize BigQuery client
 client = bigquery.Client()
