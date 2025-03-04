@@ -10,8 +10,15 @@ from folium.plugins import HeatMap
 from streamlit_folium import folium_static
 import os
 
-# Set Google Cloud credentials
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "service-account.json"
+# Load service account credentials from Streamlit secrets
+credentials_json = st.secrets["GOOGLE_APPLICATION_CREDENTIALS_JSON"]
+credentials_dict = json.loads(credentials_json)
+
+# Save credentials temporarily
+with open("/tmp/gcp_credentials.json", "w") as f:
+    json.dump(credentials_dict, f)
+
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "/tmp/gcp_credentials.json"
 
 # Initialize BigQuery client
 client = bigquery.Client()
